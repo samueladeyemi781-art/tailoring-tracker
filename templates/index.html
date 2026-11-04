@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tailoring Order Tracker</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg-main: #0f172a;
+            --bg-surface: #1e293b;
+            --card-bg: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --danger: #ef4444;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+        }
+
+        * { box-sizing: border-box; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+
+        body {
+            background-color: #f1f5f9;
+            color: var(--text-dark);
+            margin: 0;
+            padding: 24px;
+        }
+
+        /* App Header Banner */
+        .app-header {
+            max-width: 1250px;
+            margin: 0 auto 24px auto;
+            background: linear-gradient(135deg, #4f46e5, #3b82f6);
+            color: white;
+            padding: 24px 32px;
+            border-radius: 14px;
+            box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .app-header h2 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+        .app-header p {
+            margin: 4px 0 0 0;
+            font-size: 13px;
+            opacity: 0.9;
+        }
+        .badge-brand {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        /* Layout Container */
+        .container {
+            display: flex;
+            gap: 24px;
+            max-width: 1250px;
+            margin: 0 auto;
+            align-items: flex-start;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 14px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border);
+        }
+        .form-card { flex: 1; }
+        .list-card { flex: 2; overflow-x: auto; }
+
+        .card h3 {
+            margin-top: 0;
+            margin-bottom: 18px;
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Form Fields */
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 10px 12px;
+            margin-bottom: 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            background-color: #fafafa;
+            transition: all 0.2s;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            background-color: #fff;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+        }
+
+        input[readonly] {
+            background-color: #f1f5f9;
+            font-weight: 700;
+            color: var(--danger);
+        }
+
+        /* Buttons */
+        button, .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 8px;
+            font-weight: 600;
+            padding: 10px 16px;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            font-size: 13px;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+        button:hover, .btn:hover { background-color: var(--primary-hover); }
+        button:active, .btn:active { transform: scale(0.98); }
+
+        .btn-danger { background-color: var(--danger); padding: 6px 10px; font-size: 12px; }
+        .btn-success { background-color: var(--success); padding: 6px 10px; font-size: 12px; }
+
+        /* Search Box */
+        .search-box {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 18px;
+            background: #f8fafc;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+        .search-box input { margin: 0; background: #fff; }
+        .search-box button { width: auto; margin: 0; white-space: nowrap; }
+
+        /* Table Styling */
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 8px;
+        }
+
+        th {
+            background-color: #f8fafc;
+            color: var(--text-muted);
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 12px 10px;
+            text-align: left;
+            border-bottom: 2px solid var(--border);
+        }
+
+        td {
+            padding: 14px 10px;
+            border-bottom: 1px solid var(--border);
+            font-size: 13px;
+            vertical-align: middle;
+        }
+
+        tr:hover td { background-color: #f8fafc; }
+
+        .balance {
+            font-weight: 700;
+            color: var(--danger);
+            display: inline-block;
+            margin-top: 2px;
+        }
+
+        /* Status Dropdown styling inside table */
+        .status-select {
+            margin: 0;
+            padding: 6px 8px;
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: #fff;
+            cursor: pointer;
+        }
+
+        @media (max-width: 900px) {
+            .container { flex-direction: column; }
+            .form-card, .list-card { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Banner -->
+    <div class="app-header">
+        <div>
+            <h2>🧵 Tailoring Order Tracker</h2>
+            <p>Professional Measurement & Customer Management System</p>
+        </div>
+        <div class="badge-brand">Active System</div>
+    </div>
+
+    <div class="container">
+        <!-- New Order Form Card -->
+        <div class="card form-card">
+            <h3>📝 New Garment Order</h3>
+            <form action="/add" method="POST">
+                <label>Customer Name</label>
+                <input type="text" name="name" required placeholder="e.g. Samuel Ade">
+                
+                <label>Phone Number</label>
+                <input type="text" name="phone" required placeholder="e.g. 08012345678">
+                
+                <label>Style Details</label>
+                <input type="text" name="style" required placeholder="e.g. 2-Piece Agbada">
+                
+                <label>Measurements</label>
+                <textarea name="measurements" rows="3" required placeholder="Chest: 38, Sleeve: 25, Waist: 32..."></textarea>
+                
+                <label>Fitting Date</label>
+                <input type="date" name="fitting_date" required>
+                
+                <label>Total Price (₦)</label>
+                <input type="number" name="total" id="total" required oninput="calc()">
+                
+                <label>Deposit Paid (₦)</label>
+                <input type="number" name="paid" id="paid" required oninput="calc()">
+                
+                <label>Remaining Balance (₦)</label>
+                <input type="number" id="balance" readonly placeholder="Auto-calculated">
+                
+                <button type="submit" style="width: 100%; padding: 12px; font-size: 14px; margin-top: 6px;">Save Garment Order</button>
+            </form>
+        </div>
+
+        <!-- Orders Dashboard Card -->
+        <div class="card list-card">
+            <h3>📊 Active Orders & Balances</h3>
+            
+            <!-- Search Bar -->
+            <form class="search-box" method="GET" action="/">
+                <input type="text" name="search" placeholder="Search by customer name or phone..." value="{{ search }}">
+                <button type="submit">Search</button>
+                {% if search %}
+                <a href="/" class="btn" style="background:#64748b; line-height:20px;">Reset</a>
+                {% endif %}
+            </form>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Customer</th>
+                        <th>Style & Specs</th>
+                        <th>Fitting</th>
+                        <th>Financials</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                    <tr>
+                        <td><b>{{ order.name }}</b><br><small style="color:var(--text-muted);">{{ order.phone }}</small></td>
+                        <td><b>{{ order.style_description }}</b><br><small style="color:var(--text-muted);">{{ order.measurements }}</small></td>
+                        <td>{{ order.fitting_date }}</td>
+                        <td>
+                            Total: ₦{{ "{:,.2f}".format(order.total_amount) }}<br>
+                            Paid: ₦{{ "{:,.2f}".format(order.amount_paid) }}<br>
+                            <span class="balance">Bal: ₦{{ "{:,.2f}".format(order.balance) }}</span>
+                        </td>
+                        <td>
+                            <form action="/update_status/{{ order.id }}" method="POST" style="margin:0;">
+                                <select name="status" class="status-select" onchange="this.form.submit()">
+                                    <option value="Pending" {% if order.status == 'Pending' %}selected{% endif %}>Pending</option>
+                                    <option value="Fitting" {% if order.status == 'Fitting' %}selected{% endif %}>Fitting</option>
+                                    <option value="In Progress" {% if order.status == 'In Progress' %}selected{% endif %}>In Progress</option>
+                                    <option value="Completed" {% if order.status == 'Completed' %}selected{% endif %}>Completed</option>
+                                </select>
+                            </form>
+                        </td>
+                        <td>
+                            <a href="/receipt/{{ order.id }}" class="btn btn-success" target="_blank" style="margin-bottom:6px; display:block;">Receipt</a>
+                            <a href="/delete/{{ order.id }}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this order?');" style="display:block;">Delete</a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 30px;">No matching orders found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+       function calc() {
+            const total = parseFloat(document.getElementById('total').value) || 0;
+            const paid = parseFloat(document.getElementById('paid').value) || 0;
+            document.getElementById('balance').value = total - paid;
+        }
+    </script>
+</body>
+</html> 
