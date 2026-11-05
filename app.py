@@ -2,7 +2,7 @@ import os
 import sqlite3
 from flask import Flask, render_template, request, redirect, url_for
 
-app = Flask(name)
+app = Flask(__name__)
 
 def get_db():
     conn = sqlite3.connect('database.db')
