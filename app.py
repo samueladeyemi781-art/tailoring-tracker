@@ -1,7 +1,8 @@
+import os
 import sqlite3
 from flask import Flask, render_template, request, redirect, url_for
 
-app = Flask(__name__)
+app = Flask(name)
 
 def get_db():
     conn = sqlite3.connect('database.db')
@@ -14,12 +15,16 @@ def init_db():
         conn.executescript(f.read())
     conn.close()
 
-def init_db():
-    conn = get_db()
-    with open('schema.sql', 'r') as f:
-        conn.executescript(f.read())
-    conn.close()
+# Automatically create tables if they are missing
+if not os.path.exists('database.db'):
     init_db()
+else:
+    try:
+        conn = get_db()
+        conn.execute('SELECT * FROM orders')
+        conn.close()
+    except sqlite3.OperationalError:
+        init_db()
 @app.route('/')
 def index():
     search = request.args.get('search', '')
