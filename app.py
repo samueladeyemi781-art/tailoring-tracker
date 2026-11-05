@@ -14,6 +14,12 @@ def init_db():
         conn.executescript(f.read())
     conn.close()
 
+def init_db():
+    conn = get_db()
+    with open('schema.sql', 'r') as f:
+        conn.executescript(f.read())
+    conn.close()
+    init_db()
 @app.route('/')
 def index():
     search = request.args.get('search', '')
